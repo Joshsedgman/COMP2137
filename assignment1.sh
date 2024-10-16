@@ -15,11 +15,11 @@ Uptime=$(uptime -p)
 
 # Hardware Information
 #the command below gets the CPU model
-cpu_info=$(grep 'model name' /proc/cpuinfo | head -n 1 | cut -d: -f2)
-current_cpu_speed=$(cat /proc/cpuinfo | grep 'cpu MHz' | awk '{print $4}' | head -n 1) 
+cpu_info=$(lscpu | grep "Model name")
+current_cpu_speed=$(cat /proc/cpuinfo | grep 'cpu MHz' | awk '{print $4}' | head -n 1)
 maximum_cpu_speed=$(grep 'cpu MHz' /proc/cpuinfo | sort -u | awk 'END {print $4}')
 total_ram=$(free -h | grep 'Mem:' | awk '{print $2}')
-disk_info=$(lsblk -d -o NAME,SIZE,MODEL)
+disk_info=$(lsblk -o NAME,SIZE,MODEL)
 video_card=$(lspci | grep -i vga)
 
 # Network Information
@@ -39,7 +39,8 @@ process_count=$(pgrep -c .)
 load_averages=$(cat /proc/loadavg | awk '{print $1 "," $2 "," $3}')
 memory_allocation=$(cat /proc/meminfo)
 listening_network_ports=$(ss -tuln)
-ufw_rules=$(ufw status)
+# you will probably need to run 'sudo' to view the ufw status
+ufw_rules=$(sudo ufw status)
 
 # This is the output
 
@@ -80,5 +81,6 @@ Load Averages: $load_averages
 Memory Allocation: $memory_allocation
 Listening Network Ports: $listening_network_ports
 UFW Rules:
+$ufw_rules
 
 EOF
